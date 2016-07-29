@@ -12,10 +12,15 @@
 
 <div class="container">
   <div class="row">
+    <p>
+      {{.nutrient.Report.Food.Name}}
+    </p>
     <ul>
-      {{range $i, $item := .entries.List.Items}}
+      {{range $i, $item := .nutrient.Report.Food.Nutrients}}
         <li>
-          <a href="/nutrients/{{$item.Id}}">{{$item.Name}}</a>
+          <strong>{{$item.Name}}</strong>
+          &nbsp;:&nbsp;
+          {{$item.Value}}{{$item.Unit}}
         </li>
       {{end}}
     </ul>
