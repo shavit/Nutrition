@@ -38,12 +38,13 @@ func (c App) Index() revel.Result {
 func (c App) Search() revel.Result {
 	var url string
 	var apiKey string
+	var term = c.Params.Get("q")
 	entries := new(NutrientReport)
 
 	apiKey, _ = revel.Config.String("app.nutrition_api_key")
-	url = "http://api.nal.usda.gov/ndb/search/?format=json&q="+
-				"butter"+
+	url = "http://api.nal.usda.gov/ndb/search/?format=json"+
 				"&sort=n&max=25&offset=0"+
+				"&q="+term+
 				"&api_key="+apiKey
 
 	res, err := http.Get(url)
