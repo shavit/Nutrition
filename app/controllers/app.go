@@ -4,11 +4,31 @@ import (
 	"github.com/revel/revel"
 	"net/http"
 	"log"
-	"io/ioutil"
+	"encoding/json"
 )
 
 type App struct {
 	*revel.Controller
+}
+
+type NutrientItem struct {
+	Id string `json:"ndbno"`
+	Name string `json:"name"`
+	Group string `json:"group"`
+	Offset int `json:"offset"`
+}
+type NutrientList struct {
+	SearchTerm string `json:"q"`
+	Sr string `json:"sr"`
+	Start int `json:"start"`
+	End int `json:"end"`
+	Total int `json:"total"`
+	Group string `json:"group"`
+	Sort string `json:"sort"`
+	Items []NutrientItem `json:"item"`
+}
+type NutrientReport struct {
+	List NutrientList
 }
 
 func (c App) Index() revel.Result {
@@ -18,6 +38,7 @@ func (c App) Index() revel.Result {
 func (c App) Search() revel.Result {
 	var url string
 	var apiKey string
+	entries := new(NutrientReport)
 
 	apiKey, _ = revel.Config.String("app.nutrition_api_key")
 	url = "http://api.nal.usda.gov/ndb/search/?format=json&q="+
@@ -30,9 +51,8 @@ func (c App) Search() revel.Result {
 		log.Fatal(err)
 	} else {
 			defer res.Body.Close()
-			log.Println(ioutil.ReadAll(res.Body))
-			log.Println(res.Body)
+			json.NewDecoder(res.Body).Decode(entries)
 		}
 
-	return c.Render()
+	return c.Render(entries)
 }

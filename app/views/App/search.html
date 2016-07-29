@@ -12,7 +12,13 @@
 
 <div class="container">
   <div class="row">
-    
+    <ul>
+      {{range $i, $item := .entries.List.Items}}
+        <li>
+          <strong>{{$item.Name}}</strong>
+        </li>
+      {{end}}
+    </ul>
   </div>
 </div>
 
